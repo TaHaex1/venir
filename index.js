@@ -1,10 +1,12 @@
 const http = require("http");
 
+const PORT = process.env.PORT || 3000;
+
 http.createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });
   res.end("VenirMc Bot aktif.");
-}).listen(process.env.PORT || 3000, () => {
-  console.log("Web port aktif.");
+}).listen(PORT, "0.0.0.0", () => {
+  console.log(`Web port aktif: ${PORT}`);
 });
 
 const {
@@ -47,10 +49,15 @@ const MESAJ_LOG_ID = "1507812171252502748";
 const MOD_LOG_ID = "1507812171252502748";
 const TICKET_SORUMLUSU_ID = "1507852091169706125";
 
-// Render kullanıyorsan tokeni Render Variables kısmına koy.
+// Render Variables:
 // KEY: TOKEN
-// VALUE: bot tokenin
-const TOKEN = process.env.TOKEN || "BURAYA_TOKEN";
+// VALUE: Discord bot tokenin
+const TOKEN = process.env.TOKEN;
+
+if (!TOKEN) {
+  console.log("TOKEN bulunamadı. Render Variables kısmına TOKEN ekle.");
+  process.exit(1);
+}
 
 function logKanalBul(guild, kanalId) {
   return guild.channels.cache.get(kanalId);
@@ -89,7 +96,7 @@ function ticketSahibiId(channel) {
   return eslesme ? eslesme[1] : null;
 }
 
-client.once("ready", () => {
+client.once("clientReady", () => {
   console.log("VenirMc Bot aktif!");
   client.user.setActivity("VenirMc Ticket");
 });
